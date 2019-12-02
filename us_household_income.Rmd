@@ -46,6 +46,7 @@ output.dir <- './output'
 ## Preprocessing
 ### import
 ```{r}
+df_income <- read_csv(file.path(home.dir, data.dir, 'kaggle_income.csv'), na = c(''))
 ```
 
 
