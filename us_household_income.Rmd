@@ -1,0 +1,55 @@
+---
+title: "US_Household_Income"
+author: "Naeem Chowdhury, Rosa Gradilla"
+date: "December 2, 2019"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+
+##Setup
+### options
+Set up global options
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE)
+knitr::opts_chunk$set(tidy=TRUE)
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=70))
+knitr::opts_chunk$set(fig.height=4, fig.width=6)
+```
+
+
+### libraries
+Load in needed libraries 
+```{r libraries}
+# Run these if you don't have these libraries yet
+# install.packages("tidyverse") 
+# install.packages("data.table")
+# install.packages("plotly") #For pretty plots
+library(tidyverse) # For data processing and visualization
+library(data.table) # For creating tables
+library(plotly)
+spot_color = "#9ecae1" 
+text_color = "#525252"
+```
+
+### File management
+Create variables for directories
+```{r file_management}
+home.dir <- getwd()
+data.dir <- './rawData'
+viz.dir <- './dataViz'
+output.dir <- './output'
+```
+
+## Preprocessing
+### import
+```{r}
+```
+
+
+## Exploration (Playground)
+
+## Analysis
+
