@@ -51,6 +51,60 @@ df_income <- read_csv(file.path(home.dir, data.dir, 'kaggle_income.csv'), na = c
 
 
 ## Exploration (Playground)
+```{r}
+ggplot(data = df_income)+
+  geom_histogram(mapping = aes(x = data$Mean, fill = data$Type), bins = 40) +
+  labs(x = "Household Income (Mean)") +
+  scale_fill_discrete(name = "Household Type")
+```
+
+```{r}
+ggplot(data = data)+
+  geom_histogram(mapping = aes(x = data$Median, fill = data$Type), bins = 40) +
+  labs(x = "Household Income (Median)") +
+  scale_fill_discrete(name = "Household Type")
+```
+
+```{r}
+hist <- plot_ly(x = df_income$Type, type = "histogram")
+hist
+```
 
 ## Analysis
+
+#One-Sample Statistical Inference for Income
+*above 50
+*under 50
+
+-Construct a confidence interval for income's population mean value. (Make sure to check assumptions and interpret the CI)
+-Conduct a hypothesis test against a certain value. Interpret its results
+
+```{r}
+
+```
+
+#Satistical Inference for Type
+
+-Construct a CI, hypothesis test against a prespecified constant.
+
+```{r}
+
+```
+
+#Two-sample statistical inference
+
+Is there a significant difference between the household incomes in cities and towns?
+
+Check assumptions, interpret the results
+
+```{r}
+
+```
+
+For the confidence interval and hypothesis test conducted, we will run simulations: 
+we will take a random subsample of fixed size from our full data set, we will then proceed to calculate the confidence intervals and hypothesis tests against the true sample mean, record the coverage and type I errors obtained.
+
+```{r}
+
+```
 
