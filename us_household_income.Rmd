@@ -13,7 +13,7 @@ editor_options:
 Set up global options
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo=TRUE)
+knitr::opts_chunk$set(echo=FALSE)
 knitr::opts_chunk$set(tidy=TRUE)
 knitr::opts_chunk$set(tidy.opts=list(width.cutoff=70))
 knitr::opts_chunk$set(fig.height=4, fig.width=6)
@@ -66,16 +66,16 @@ everything else
 ### Histograms
 ```{r}
 # These histograms satisfy the distribution requirement of the project.
-ggplot(data = df_income)+
-  geom_histogram(mapping = aes(x = data$Mean, fill = data$Type), bins = 40) +
+ggplot(data = df_income2)+
+  geom_histogram(mapping = aes(x = df_income2$Mean, fill = df_income2$Type), bins = 40) +
   labs(x = "Household Income (Mean)") +
   scale_fill_discrete(name = "Household Type")
 ```
 
 ```{r}
 # Distribution
-ggplot(data = data)+
-  geom_histogram(mapping = aes(x = data$Median, fill = data$Type), bins = 40) +
+ggplot(data = df_income2)+
+  geom_histogram(mapping = aes(x = df_income2$Median, fill = df_income2$Type), bins = 40) +
   labs(x = "Household Income (Median)") +
   scale_fill_discrete(name = "Household Type")
 ```
