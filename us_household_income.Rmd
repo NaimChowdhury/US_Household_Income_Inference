@@ -82,6 +82,13 @@ hist <- plot_ly(x = df_income$Type, type = "histogram")
 hist
 ```
 
+### What's going on with all the rich people?
+```{r}
+# There are 4k+ data points which have precisely 300000 dollars as their median income value. This is a data anomaly that messes with our summary statistics, so we decided it would be best to toss them out.
+rich_people <- df_income %>% filter(Median == 300000)
+```
+
+
 ## Analysis
 
 ### Correlation Matrix
@@ -95,8 +102,26 @@ melted_quant <- melt(cor_quant)
 
 ggplot(data = melted_quant, aes(x=Var1, y=Var2, fill=value)) + 
   geom_tile()
+```
+
+### Scatter Plots and Linear Regressions
+```{r}
+# An initial scatter plot to see the shape of the relationship
+ggplot(quant_vars, aes(x=Median, y=AWater)) + geom_point()
+ggplot(quant_vars, aes(x=Median, y=ALand)) + geom_point()
+
+# It seems that the correlations we produced in the previous section are a result of outlier values that skew the data. Lets try throwing out the outliers.
+```
+
+### Data Reshaping to get rid of Problem Points
+```{r}
+df_income <- df_income %>% filter(Median != 300000 & Median != 0)
+
+quant_vars <- df_income %>% 
+  select(Mean, Median, Stdev, AWater, ALand)
 
 ```
+
 
 
 ### One-Sample Statistical Inference for Income
