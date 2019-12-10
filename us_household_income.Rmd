@@ -49,6 +49,9 @@ output.dir <- './output'
 ### import
 ```{r}
 df_income <- read_csv(file.path(home.dir, data.dir, 'kaggle_income.csv'), na = c(''))
+
+df_income2 <- df_income %>% filter(Median != 300000 & Median != 0)
+
 ```
 
 
@@ -119,6 +122,16 @@ df_income <- df_income %>% filter(Median != 300000 & Median != 0)
 
 quant_vars <- df_income %>% 
   select(Mean, Median, Stdev, AWater, ALand)
+
+shaved_data <- quant_vars %>% filter(Median < 150000 & ALand < 30000000)
+ggplot(shaved_data, aes(x=Median, y=ALand)) + geom_point()
+
+cor_quant <- cor(shaved_data)
+
+melted_quant <- melt(cor_quant)
+
+ggplot(data = melted_quant, aes(x=Var1, y=Var2, fill=value)) + 
+  geom_tile()
 
 ```
 
