@@ -243,6 +243,20 @@ we will take a random subsample of fixed size from our full data set, we will th
 
 ```{r}
 #number 5
+x <- df_income2$Median
+mu <- mean(x)
 
+n.trials <- 10000
+n <- 100
+inside <-  numeric(n.trials)
+for (j in 1:n.trials){
+  x.samp <- sample(x, n)
+  x.bar <- mean(x.samp)
+  x.sd <- sd(x.samp)
+  inside[j] <- (mu > x.bar - qt(0.975,n-1)*x.sd/sqrt(n) & mu < x.bar + qt(0.975,n-1)*x.sd/sqrt(n))
+}
+
+coverage <- mean(inside)
+print(coverage)
 ```
 
