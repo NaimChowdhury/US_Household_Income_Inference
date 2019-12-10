@@ -167,6 +167,15 @@ Our confidence interval for population's median income is [53145.03, 53812.59]. 
 
 We came up with a null hypothesis claiming the true population's median income is equal to 50,000, our t-test against this null hypothesis gave us a p-value < 2.2e-16 thus we reject the null hypothesis. This agrees with our confidence interval given that 50,000 is not part of it.
 
+```{r}
+#Cohen's d
+d <- abs(xbar - 50000)/s
+d
+
+```
+Our effect size is 0.1222492. We witness a relatively small practical effect size.
+
+
 ### Statistical Inference for Type
 
 -Construct a CI, hypothesis test against a prespecified constant.
