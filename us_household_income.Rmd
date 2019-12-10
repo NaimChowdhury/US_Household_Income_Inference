@@ -192,6 +192,13 @@ prop.test(13954, 27924, 0.5)
 ```
 We failed to reject the null hypothesis. A p-value of 0.9285 indicates that the probability of observing our test statistic p = 0.4997135 is 93% given the null-hypothesis is true.
 
+```{r}
+#Cohen's h
+x <- asin(sqrt(0.4997135)) - asin(sqrt(0.5))
+effect.size <- 2*abs(x)
+```
+Our effect size is 0.000573, we witness a very small practical effect size.
+
 ### Statistical Inference for Type
 
 -Construct a CI, hypothesis test against a prespecified constant.
@@ -201,14 +208,39 @@ We failed to reject the null hypothesis. A p-value of 0.9285 indicates that the 
 ```
 
 ### Two-sample statistical inference
+Two sample: compare means of two population groups: cities and towns
 
 Is there a significant difference between the household incomes in cities and towns?
+Check assumptions, interpret the results.
 
-Check assumptions, interpret the results
+Ho: mt = mc  i.e. there is no difference
+Ha: mt != mc
 
 ```{r}
+city <- df_income2 %>%
+    filter(Type == 'City')
 
+town <- df_income2 %>%
+  filter(Type == 'Town')
+
+t.test(city$Median, town$Median)
 ```
+95% confident interval is [747.1329, 5865.2244]. P-value is equal to 0.0114, at a 0.05 significance level we fail to reject the null hypothesis: the true difference in means is not equal to 0. This agrees with our conficence inteval since 0 is not within it.
+
+Checking assumptions:
+```{r}
+hist(city$Mean)
+hist(town$Mean)
+```
+Since both of our groups seem to be slightly skwed, out t-test might not be reliable since it assumes the data is normally distributed.
+
+Effect size:
+```{r}
+s1 <- sd(town$Median)
+s2 <- sd(city$Median)
+effect.size <- abs(47112.28 - 43806.10)/sqrt((s1^2 + s2^2)/2)
+```
+Our effect size is 0.148239. thus we witness a relatively small effect size. 
 
 For the confidence interval and hypothesis test conducted, we will run simulations: 
 we will take a random subsample of fixed size from our full data set, we will then proceed to calculate the confidence intervals and hypothesis tests against the true sample mean, record the coverage and type I errors obtained.
