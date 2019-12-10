@@ -238,8 +238,8 @@ effect.size <- abs(47112.28 - 43806.10)/sqrt((s1^2 + s2^2)/2)
 Our effect size is 0.148239. thus we witness a relatively small effect size. 
 
 
-For the confidence interval and hypothesis test conducted, we will run simulations: 
-we will take a random subsample of fixed size from our full data set, we will then proceed to calculate the confidence intervals and hypothesis tests against the true sample mean, record the coverage and type I errors obtained.
+For the confidence interval and hypothesis test conducted, we ran simulations: 
+we took a random subsample of fixed size (n=100) from our full data set, we then proceeded to calculate the confidence intervals and hypothesis tests against the true sample mean, record the coverage and type I errors obtained.
 
 ```{r}
 #number 5
@@ -253,10 +253,10 @@ for (j in 1:n.trials){
   x.samp <- sample(x, n)
   x.bar <- mean(x.samp)
   x.sd <- sd(x.samp)
-  inside[j] <- (mu > x.bar - qt(0.975,n-1)*x.sd/sqrt(n) & mu < x.bar + qt(0.975,n-1)*x.sd/sqrt(n))
+  inside[j] <- (mu > x.bar - qt(0.95,n-1)*x.sd/sqrt(n) & mu < x.bar + qt(0.95,n-1)*x.sd/sqrt(n))
 }
 
 coverage <- mean(inside)
 print(coverage)
 ```
-
+Our coverage for the true sample mean over 10,000 trials was 88.98%, a little lower than expected (95%), this could be attributed to outliers in the data. 
