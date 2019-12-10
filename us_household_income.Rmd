@@ -159,10 +159,13 @@ CI <- c(xbar - (cv*se), xbar + (cv*se))
 print(CI)
 
 
-#Hypothesis test
-#Ho:      Ha:
+#Hypothesis Test
+#Ho: mu = 50,000      #Ha: mu != 50,000
+t.test(df_income2$Median, mu=50000, alternative = "two.sided")
 ```
 Our confidence interval for population's median income is [53145.03, 53812.59]. We are 95% confident the true population's median income falls bewteen our confidence interval 95% of the time. Given that our data came from a random sample and assuming the population's distribution is approximately normal.
+
+We came up with a null hypothesis claiming the true population's median income is equal to 50,000, our t-test against this null hypothesis gave us a p-value < 2.2e-16 thus we reject the null hypothesis. This agrees with our confidence interval given that 50,000 is not part of it.
 
 ### Statistical Inference for Type
 
