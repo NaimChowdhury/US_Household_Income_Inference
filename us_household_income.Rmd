@@ -145,8 +145,24 @@ ggplot(data = melted_quant, aes(x=Var1, y=Var2, fill=value)) +
 -Conduct a hypothesis test against a certain value. Interpret its results
 
 ```{r}
+clevel <- 0.95
+n <- length(df_income2$Median)
+  
+xbar <- mean(df_income2$Median)
+s <- sd(df_income2$Median)
+se <- s/(sqrt(n))
+x <- (1-clevel)/2
+p <- clevel + x
+cv <- qt(p, n-1)
+CI <- c(xbar - (cv*se), xbar + (cv*se))
 
+print(CI)
+
+
+#Hypothesis test
+#Ho:      Ha:
 ```
+Our confidence interval for population's median income is [53145.03, 53812.59]. We are 95% confident the true population's median income falls bewteen our confidence interval 95% of the time. Given that our data came from a random sample and assuming the population's distribution is approximately normal.
 
 ### Statistical Inference for Type
 
