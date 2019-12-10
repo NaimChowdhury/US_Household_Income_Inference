@@ -191,7 +191,7 @@ prop.table <- table(shaved_income)*(1/27924)
 
 prop.test(13954, 27924, 0.5)
 ```
-We failed to reject the null hypothesis. A p-value of 0.9285 indicates that the probability of observing our test statistic p = 0.4997135 is 93% given the null-hypothesis is true.
+Our confidence interval is [0.4938316, 0.5055955]. We tested a null p equal to 0.5. We failed to reject the null hypothesis. A p-value of 0.9285 indicates that the probability of observing our test statistic p = 0.4997135 is 93% given the null-hypothesis is true.
 
 ```{r}
 #Cohen's h
