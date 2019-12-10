@@ -225,7 +225,7 @@ town <- df_income2 %>%
 
 t.test(city$Median, town$Median)
 ```
-95% confident interval is [747.1329, 5865.2244]. P-value is equal to 0.0114, at a 0.05 significance level we fail to reject the null hypothesis: the true difference in means is not equal to 0. This agrees with our conficence inteval since 0 is not within it.
+95% confidence interval is [747.1329, 5865.2244]. P-value is equal to 0.0114, at a 0.05 significance level we fail to reject the null hypothesis: the true difference in means is not equal to 0. This agrees with our conficence inteval since 0 is not within it.
 
 Checking assumptions:
 ```{r}
