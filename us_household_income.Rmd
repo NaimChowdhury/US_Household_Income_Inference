@@ -30,6 +30,8 @@ Load in needed libraries
 library(tidyverse) # For data processing and visualization
 library(data.table) # For creating tables
 library(plotly)
+library(ggplot2)
+library(reshape2)
 spot_color = "#9ecae1" 
 text_color = "#525252"
 ```
@@ -51,7 +53,16 @@ df_income <- read_csv(file.path(home.dir, data.dir, 'kaggle_income.csv'), na = c
 
 
 ## Exploration (Playground)
+
+### Quantitative Variables
+Mean, Median, St. Dev, Sum of Weights, AWater, ALand
+
+### Qualitative Variables
+everything else
+
+### Histograms
 ```{r}
+# These histograms satisfy the distribution requirement of the project.
 ggplot(data = df_income)+
   geom_histogram(mapping = aes(x = data$Mean, fill = data$Type), bins = 40) +
   labs(x = "Household Income (Mean)") +
@@ -59,6 +70,7 @@ ggplot(data = df_income)+
 ```
 
 ```{r}
+# Distribution
 ggplot(data = data)+
   geom_histogram(mapping = aes(x = data$Median, fill = data$Type), bins = 40) +
   labs(x = "Household Income (Median)") +
@@ -72,7 +84,22 @@ hist
 
 ## Analysis
 
-#One-Sample Statistical Inference for Income
+### Correlation Matrix
+```{r}
+quant_vars <- df_income %>% 
+  select(Mean, Median, Stdev, AWater, ALand)
+
+cor_quant <- cor(quant_vars)
+
+melted_quant <- melt(cor_quant)
+
+ggplot(data = melted_quant, aes(x=Var1, y=Var2, fill=value)) + 
+  geom_tile()
+
+```
+
+
+### One-Sample Statistical Inference for Income
 *above 50
 *under 50
 
@@ -83,7 +110,7 @@ hist
 
 ```
 
-#Satistical Inference for Type
+### Statistical Inference for Type
 
 -Construct a CI, hypothesis test against a prespecified constant.
 
@@ -91,7 +118,7 @@ hist
 
 ```
 
-#Two-sample statistical inference
+### Two-sample statistical inference
 
 Is there a significant difference between the household incomes in cities and towns?
 
