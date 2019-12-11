@@ -258,7 +258,7 @@ Our effect size is 0.148239. thus we witness a relatively small effect size.
 
 
 For the confidence interval and hypothesis test conducted, we ran simulations: 
-we took a random subsample of fixed size (n=100) from our full data set, we then proceeded to calculate the confidence intervals and hypothesis tests against the true sample mean, record the coverage and type I errors obtained.
+we took a random subsample of fixed size (n=100) from our full data set, we then proceeded to calculate the confidence intervals and hypothesis tests against the true sample mean, recording the coverage.
 
 ```{r}
 #number 5
