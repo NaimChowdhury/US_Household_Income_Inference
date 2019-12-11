@@ -4,13 +4,13 @@ author: "Naeem Chowdhury, Rosa Gradilla"
 date: "December 2, 2019"
 output: html_document
 editor_options: 
-  chunk_output_type: console
+  chunk_output_type: inline
 ---
 
 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo=FALSE)
+knitr::opts_chunk$set(echo=TRUE)
 knitr::opts_chunk$set(tidy=TRUE)
 knitr::opts_chunk$set(tidy.opts=list(width.cutoff=70))
 knitr::opts_chunk$set(fig.height=4, fig.width=6)
@@ -57,10 +57,6 @@ df_income2 <- df_income %>% filter(Median != 300000 & Median != 0)
 
 ## Quantitative Variables
 Mean, Median, St. Dev, Sum of Weights, AWater, ALand
-```{r}
-head(df_income2)
-```
-
 
 
 ### Histograms
@@ -81,10 +77,6 @@ ggplot(data = df_income)+
   scale_fill_discrete(name = "Household Type")
 ```
 
-```{r}
-hist <- plot_ly(x = df_income$Type, type = "histogram")
-hist
-```
 
 ### What's going on with all the rich people?
 There are 4k+ data points which have precisely 300000 dollars as their median income value. This is a data anomaly that messes with our summary statistics, so we decided it would be best to toss them out.
@@ -180,7 +172,7 @@ print(CI)
 #Ho: mu = 50,000      #Ha: mu != 50,000
 t.test(df_income2$Median, mu=50000, alternative = "two.sided")
 ```
-We tersted against the null hypothesis mu = 50,000 on a two sided t test. Our confidence interval for population's median income is [53145.03, 53812.59]. We are 95% confident the true population's median income falls bewteen our confidence interval 95% of the time. Given that our data came from a random sample and assuming the population's distribution is approximately normal.
+We tested against the null hypothesis mu = 50,000 on a two sided t test. Our confidence interval for population's median income is [53145.03, 53812.59]. We are 95% confident the true population's median income falls bewteen our confidence interval 95% of the time. Given that our data came from a random sample and assuming the population's distribution is approximately normal.
 
 We came up with a null hypothesis claiming the true population's median income is equal to 50,000, our t-test against this null hypothesis gave us a p-value < 2.2e-16 thus we reject the null hypothesis. This agrees with our confidence interval given that 50,000 is not part of it.
 
@@ -194,7 +186,7 @@ Our effect size is 0.1222492. We witness a relatively small practical effect siz
 
 ### Categorical Explanatory Variable
 
-Here we are performing a 
+Here we are performing a proportion test for the proportion of median income being lower than 50,000
 ```{r}
 #number 3
 cuts <- quantile(df_income2$Median, c(0, 1/2, 1))
@@ -202,6 +194,7 @@ cuts <- quantile(df_income2$Median, c(0, 1/2, 1))
 df_categ <- df_income2 %>% mutate(category=cut(Median, breaks=cuts, labels=c("below","above")))
 
 shaved_income <- df_categ %>% select(category)
+table(shaved_income)
 
 prop.table <- table(shaved_income)*(1/27924)
 
@@ -223,13 +216,13 @@ Our effect size is 0.000573, we witness a very small practical effect size.
 Two sample: compare means of two population groups: cities and towns
 
 Is there a significant difference between the household incomes in cities and towns?
-Check assumptions, interpret the results.
 
 Ho: mt = mc  i.e. there is no difference
 Ha: mt != mc
 
 ```{r}
 #number 4
+#Check assumptions, interpret the results.
 
 city <- df_income2 %>%
     filter(Type == 'City')
@@ -272,10 +265,11 @@ for (j in 1:n.trials){
   x.samp <- sample(x, n)
   x.bar <- mean(x.samp)
   x.sd <- sd(x.samp)
-  inside[j] <- (mu > x.bar - qt(0.95,n-1)*x.sd/sqrt(n) & mu < x.bar + qt(0.95,n-1)*x.sd/sqrt(n))
+  CI[j] <- (mu > x.bar - qt(0.95,n-1)*x.sd/sqrt(n) & mu < x.bar + qt(0.95,n-1)*x.sd/sqrt(n))
+  inside[j] <- CI[j]
 }
 
 coverage <- mean(inside)
 print(coverage)
 ```
-Our coverage for the true sample mean over 10,000 trials was 88.98%, a little lower than expected (95%), this could be attributed to outliers in the data. 
+Our coverage for the true sample mean over 10,000 trials was 89.60%, a little lower than expected (95%), this could be attributed to outliers in the data. 
