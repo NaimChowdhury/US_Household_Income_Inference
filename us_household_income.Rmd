@@ -8,9 +8,6 @@ editor_options:
 ---
 
 
-##Setup
-### options
-Set up global options
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo=FALSE)
@@ -20,9 +17,10 @@ knitr::opts_chunk$set(fig.height=4, fig.width=6)
 ```
 
 
-### libraries
-Load in needed libraries 
+## libraries
+
 ```{r libraries}
+#Load in needed libraries 
 # Run these if you don't have these libraries yet
 # install.packages("tidyverse") 
 # install.packages("data.table")
@@ -36,9 +34,10 @@ spot_color = "#9ecae1"
 text_color = "#525252"
 ```
 
-### File management
-Create variables for directories
+## File management
+
 ```{r file_management}
+#Create variables for directories
 home.dir <- getwd()
 data.dir <- './rawData'
 viz.dir <- './dataViz'
@@ -46,22 +45,23 @@ output.dir <- './output'
 ```
 
 ## Preprocessing
-### import
+
 ```{r}
+#import
 df_income <- read_csv(file.path(home.dir, data.dir, 'kaggle_income.csv'), na = c(''))
 
 df_income2 <- df_income %>% filter(Median != 300000 & Median != 0)
+```
 
+### Exploration (Playground)
+
+## Quantitative Variables
+Mean, Median, St. Dev, Sum of Weights, AWater, ALand
+```{r}
+head(df_income2)
 ```
 
 
-## Exploration (Playground)
-
-### Quantitative Variables
-Mean, Median, St. Dev, Sum of Weights, AWater, ALand
-
-### Qualitative Variables
-everything else
 
 ### Histograms
 ```{r}
@@ -75,8 +75,8 @@ ggplot(data = df_income2)+
 
 ```{r}
 # Distribution
-ggplot(data = df_income2)+
-  geom_histogram(mapping = aes(x = df_income2$Median, fill = df_income2$Type), bins = 40) +
+ggplot(data = df_income)+
+  geom_histogram(mapping = aes(x = df_income$Median, fill = df_income$Type), bins = 40) +
   labs(x = "Household Income (Median)") +
   scale_fill_discrete(name = "Household Type")
 ```
@@ -87,15 +87,19 @@ hist
 ```
 
 ### What's going on with all the rich people?
+There are 4k+ data points which have precisely 300000 dollars as their median income value. This is a data anomaly that messes with our summary statistics, so we decided it would be best to toss them out.
 ```{r}
 # There are 4k+ data points which have precisely 300000 dollars as their median income value. This is a data anomaly that messes with our summary statistics, so we decided it would be best to toss them out.
 rich_people <- df_income %>% filter(Median == 300000)
+
+count(rich_people)
 ```
 
 
-## Analysis
+### Analysis
 
-### Correlation Matrix
+## Correlation Matrix
+
 ```{r}
 quant_vars <- df_income %>% 
   select(Mean, Median, Stdev, AWater, ALand)
@@ -108,16 +112,21 @@ ggplot(data = melted_quant, aes(x=Var1, y=Var2, fill=value)) +
   geom_tile()
 ```
 
-### Scatter Plots and Linear Regressions
+## Scatter Plots and Linear Regressions
 ```{r}
 # An initial scatter plot to see the shape of the relationship
 ggplot(quant_vars, aes(x=Median, y=AWater)) + geom_point()
 ggplot(quant_vars, aes(x=Median, y=ALand)) + geom_point()
 
-# It seems that the correlations we produced in the previous section are a result of outlier values that skew the data. Lets try throwing out the outliers.
+
 ```
+It seems that the correlations we produced in the previous section are a result of outlier values that skew the data. Lets try throwing out the outliers.
+
 
 ### Data Reshaping to get rid of Problem Points
+
+##Correlation matrix without outliers
+
 ```{r}
 df_income <- df_income %>% filter(Median != 300000 & Median != 0)
 
@@ -136,14 +145,22 @@ ggplot(data = melted_quant, aes(x=Var1, y=Var2, fill=value)) +
 
 ```
 
-
+## Histogram without outliers
+```{r}
+# Distribution
+ggplot(data = df_income)+
+  geom_histogram(mapping = aes(x = df_income$Median, fill = df_income$Type), bins = 40) +
+  labs(x = "Household Income (Median)") +
+  scale_fill_discrete(name = "Household Type")
+```
 
 ### One-Sample Statistical Inference for Income
 
--Construct a confidence interval for income's population mean value. (Make sure to check assumptions and interpret the CI)
--Conduct a hypothesis test against a certain value. Interpret its results
-
+Confidence interval for income's population mean income value.
 ```{r}
+#-Construct a confidence interval for income's population mean value. (Make sure to check assumptions and interpret the CI)
+#-Conduct a hypothesis test against a certain value. Interpret its results
+
 #number 2
 clevel <- 0.95
 n <- length(df_income2$Median)
@@ -163,7 +180,7 @@ print(CI)
 #Ho: mu = 50,000      #Ha: mu != 50,000
 t.test(df_income2$Median, mu=50000, alternative = "two.sided")
 ```
-Our confidence interval for population's median income is [53145.03, 53812.59]. We are 95% confident the true population's median income falls bewteen our confidence interval 95% of the time. Given that our data came from a random sample and assuming the population's distribution is approximately normal.
+We tersted against the null hypothesis mu = 50,000 on a two sided t test. Our confidence interval for population's median income is [53145.03, 53812.59]. We are 95% confident the true population's median income falls bewteen our confidence interval 95% of the time. Given that our data came from a random sample and assuming the population's distribution is approximately normal.
 
 We came up with a null hypothesis claiming the true population's median income is equal to 50,000, our t-test against this null hypothesis gave us a p-value < 2.2e-16 thus we reject the null hypothesis. This agrees with our confidence interval given that 50,000 is not part of it.
 
@@ -176,6 +193,8 @@ d
 Our effect size is 0.1222492. We witness a relatively small practical effect size.
 
 ### Categorical Explanatory Variable
+
+Here we are performing a 
 ```{r}
 #number 3
 cuts <- quantile(df_income2$Median, c(0, 1/2, 1))
