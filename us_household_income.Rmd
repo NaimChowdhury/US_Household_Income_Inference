@@ -37,7 +37,14 @@ The dataset originally developed for real estate and business investment researc
 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo=TRUE)
+knitr::opts_chunk$set(
+	echo = FALSE,
+	fig.height = 4,
+	fig.width = 6,
+	warning = FALSE,
+	tidy = TRUE,
+	tidy.opts = list(width.cutoff = 70)
+)
 knitr::opts_chunk$set(tidy=TRUE)
 knitr::opts_chunk$set(tidy.opts=list(width.cutoff=70))
 knitr::opts_chunk$set(fig.height=4, fig.width=6)
@@ -46,7 +53,7 @@ knitr::opts_chunk$set(fig.height=4, fig.width=6)
 
 ## libraries
 
-```{r libraries}
+```{r libraries, echo=FALSE, message=FALSE, warning=FALSE}
 #Load in needed libraries 
 # Run these if you don't have these libraries yet
 # install.packages("tidyverse") 
@@ -63,7 +70,7 @@ text_color = "#525252"
 
 ## File management
 
-```{r file_management}
+```{r file_management, echo=FALSE, message=FALSE, warning=FALSE}
 #Create variables for directories
 home.dir <- getwd()
 data.dir <- './rawData'
@@ -73,7 +80,7 @@ output.dir <- './output'
 
 ## Preprocessing
 
-```{r}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 #import
 df_income <- read_csv(file.path(home.dir, data.dir, 'kaggle_income.csv'), na = c(''))
 
@@ -85,7 +92,7 @@ df_income2 <- df_income %>% filter(Median != 300000 & Median != 0)
 
 ### Histograms
 Before subsetting our data, we have a strange bimodal distribution of values. There is a second peak all concentrated at an income of $300k. 
-```{r}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 # Distribution
 ggplot(data = df_income)+
   geom_histogram(mapping = aes(x = df_income$Median, fill = df_income$Type), bins = 40) +
@@ -94,7 +101,7 @@ ggplot(data = df_income)+
 ```
 
 Afterwards, we have a much more natural distribution.
-```{r}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 #number 1
 # These histograms satisfy the distribution requirement of the project.
 ggplot(data = df_income2)+
@@ -105,7 +112,7 @@ ggplot(data = df_income2)+
 
 ### What's going on with all the rich people?
 There are 4k+ data points which have precisely 300000 dollars as their median income value. This is a data anomaly that messes with our summary statistics, so we decided it would be best to toss them out.
-```{r}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 # There are 4k+ data points which have precisely 300000 dollars as their median income value. This is a data anomaly that messes with our summary statistics, so we decided it would be best to toss them out.
 rich_people <- df_income %>% filter(Median == 300000)
 
@@ -119,7 +126,7 @@ count(rich_people)
 How are the quantitative variables correlated with each other? Since the bulk of our quantitative variables are summary statistics gathered manually about each location, they will naturally have a high correlation with each other. 
 
 Naturally, we might ask, do the land area and water area of a location have any relationship with the income of its residents?
-```{r}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 quant_vars <- df_income2 %>% 
   select(Mean, Median, Stdev, AWater, ALand)
 
@@ -133,7 +140,7 @@ ggplot(data = melted_quant, aes(x=Var1, y=Var2, fill=value)) +
 
 ### Scatter Plots and Linear Regressions
 At first glance, there doesn't seem to be much of a relationship between the physical area of a city and the income of the residents. What might happen if we remove outlier values?
-```{r}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 # An initial scatter plot to see the shape of the relationship
 ggplot(quant_vars, aes(x=Median, y=AWater)) +
   geom_point() + 
@@ -146,7 +153,7 @@ ggplot(quant_vars, aes(x=Median, y=ALand)) +
 It seems that the correlations we produced in the previous section are a result of outlier values that skew the data. Lets to find out what the outliers are.
 
 
-```{r}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 ggplot(quant_vars, aes(x = "", y = AWater)) +
   geom_boxplot() +
   labs(title="Water Area Box Plot", x="", y = "Square Area of Land at Location") +
@@ -171,7 +178,7 @@ ggplot(quant_vars.noOutliers, aes(x = "", y = ALand)) +
               axis.text.x = element_text(angle = 90, hjust = 1))
 ```
 
-```{r}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 # An initial scatter plot to see the shape of the relationship
 ggplot(quant_vars.noOutliers, aes(x=Median, y=AWater)) +
   geom_point() + 
@@ -187,7 +194,7 @@ ggplot(quant_vars.noOutliers, aes(x=Median, y=ALand)) +
 
 ### Correlation matrix without outliers
 
-```{r}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 cor_quant <- cor(quant_vars.noOutliers)
 
 cor_quant
@@ -203,7 +210,7 @@ ggplot(data = melted_quant, aes(x=Var1, y=Var2, fill=value)) +
 ## One-Sample Statistical Inference for Income
 
 Confidence interval for income's population mean income value.
-```{r}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 #-Construct a confidence interval for income's population mean value. (Make sure to check assumptions and interpret the CI)
 #-Conduct a hypothesis test against a certain value. Interpret its results
 
@@ -230,7 +237,7 @@ We tested against the null hypothesis mu = 50,000 on a two sided t test. Our con
 
 We came up with a null hypothesis claiming the true population's median income is equal to 50,000, our t-test against this null hypothesis gave us a p-value < 2.2e-16 thus we reject the null hypothesis. This agrees with our confidence interval given that 50,000 is not part of it.
 
-```{r}
+```{r echo=FALSE, warning=FALSE}
 #Cohen's d
 d <- abs(xbar - 50000)/s
 d
@@ -241,7 +248,7 @@ Our effect size is 0.1222492. We witness a relatively small practical effect siz
 ## Categorical Explanatory Variable
 
 Here we are performing a proportion test for the proportion of median income being lower than 50,000
-```{r}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 #number 3
 cuts <- quantile(df_income2$Median, c(0, 1/2, 1))
 
@@ -259,7 +266,7 @@ prop.test(13954, 27924, 0.5)
 ```
 Our confidence interval is [0.4938316, 0.5055955]. We tested a null p equal to 0.5. We failed to reject the null hypothesis. A p-value of 0.9285 indicates that the probability of observing our test statistic p = 0.4997135 is 93% given the null-hypothesis is true.
 
-```{r}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 #Cohen's h
 x <- asin(sqrt(0.4997135)) - asin(sqrt(0.5))
 effect.size <- 2*abs(x)
@@ -274,7 +281,7 @@ Is there a significant difference between the household incomes in cities and to
 Ho: mt = mc  i.e. there is no difference
 Ha: mt != mc
 
-```{r}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 #number 4
 #Check assumptions, interpret the results.
 
@@ -289,14 +296,14 @@ t.test(city$Median, town$Median)
 95% confidence interval is [747.1329, 5865.2244]. P-value is equal to 0.0114, at a 0.05 significance level we fail to reject the null hypothesis: the true difference in means is not equal to 0. This agrees with our conficence inteval since 0 is not within it.
 
 Checking assumptions:
-```{r}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 hist(city$Mean)
 hist(town$Mean)
 ```
 Since both of our groups seem to be slightly skwed, out t-test might not be reliable since it assumes the data is normally distributed.
 
 Effect size:
-```{r}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 s1 <- sd(town$Median)
 s2 <- sd(city$Median)
 effect.size <- abs(47112.28 - 43806.10)/sqrt((s1^2 + s2^2)/2)
@@ -307,7 +314,7 @@ Our effect size is 0.148239. thus we witness a relatively small effect size.
 For the confidence interval and hypothesis test conducted, we ran simulations: 
 we took a random subsample of fixed size (n=100) from our full data set, we then proceeded to calculate the confidence intervals and hypothesis tests against the true sample mean, recording the coverage.
 
-```{r}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 #number 5
 x <- df_income2$Median
 mu <- mean(x)
@@ -378,7 +385,7 @@ Our coverage for the true sample mean over 10,000 trials was 89.60%, a little lo
 
 Based on our previous analysis of the quantitative variables, it seems that income is most highly correlated with the water area at the location. We proceed by computing 10,000 bootstrapped simulations of the data. 
 
-```{r}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 plot(quant_vars.noOutliers$Mean, quant_vars.noOutliers$AWater, 
      col = "red", pch = 19,
      xlab = "Median Income", ylab = "Area of Water in Location",
