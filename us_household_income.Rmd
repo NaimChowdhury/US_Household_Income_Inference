@@ -324,6 +324,36 @@ x <- df_income2$Median
 mu <- mean(x)
 
 n.trials <- 10000
+n <- 10
+inside <-  numeric(n.trials)
+for (j in 1:n.trials){
+  x.samp <- sample(x, n)
+  x.bar <- mean(x.samp)
+  x.sd <- sd(x.samp)
+  CI[j] <- (mu > x.bar - qt(0.95,n-1)*x.sd/sqrt(n) & mu < x.bar + qt(0.95,n-1)*x.sd/sqrt(n))
+  inside[j] <- CI[j]
+}
+
+coverage10 <- mean(inside)
+cat("For a subsample of 10 points:", coverage10)
+print(" ")
+
+n.trials <- 10000
+n <- 50
+inside <-  numeric(n.trials)
+for (j in 1:n.trials){
+  x.samp <- sample(x, n)
+  x.bar <- mean(x.samp)
+  x.sd <- sd(x.samp)
+  CI[j] <- (mu > x.bar - qt(0.95,n-1)*x.sd/sqrt(n) & mu < x.bar + qt(0.95,n-1)*x.sd/sqrt(n))
+  inside[j] <- CI[j]
+}
+
+coverage50 <- mean(inside)
+cat("For a subsample of 50 points:", coverage50)
+print(" ")
+
+n.trials <- 10000
 n <- 100
 inside <-  numeric(n.trials)
 for (j in 1:n.trials){
@@ -334,8 +364,23 @@ for (j in 1:n.trials){
   inside[j] <- CI[j]
 }
 
-coverage <- mean(inside)
-print(coverage)
+coverage100 <- mean(inside)
+cat("For a subsample of 100 points:", coverage100)
+print(" ")
+
+n.trials <- 10000
+n <- 1000
+inside <-  numeric(n.trials)
+for (j in 1:n.trials){
+  x.samp <- sample(x, n)
+  x.bar <- mean(x.samp)
+  x.sd <- sd(x.samp)
+  CI[j] <- (mu > x.bar - qt(0.95,n-1)*x.sd/sqrt(n) & mu < x.bar + qt(0.95,n-1)*x.sd/sqrt(n))
+  inside[j] <- CI[j]
+}
+
+coverage1000 <- mean(inside)
+cat("For a subsample of 1000 points:", coverage1000)
 ```
 Our coverage for the true sample mean over 10,000 trials was 89.60%, a little lower than expected (95%), this could be attributed to outliers in the data. 
 
@@ -349,9 +394,9 @@ plot(quant_vars.noOutliers$Mean, quant_vars.noOutliers$AWater,
      col = "red", pch = 19,
      xlab = "Median Income", ylab = "Area of Water in Location",
      main = "Bootstrapped Linear Model for Income vs. Water")
-```
 
-```{r}
+
+
 waterfit <- lm(Median ~ AWater, data = quant_vars.noOutliers)
 
 index <- 1:nrow(quant_vars.noOutliers)
