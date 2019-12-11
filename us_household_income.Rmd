@@ -139,10 +139,11 @@ At first glance, there doesn't seem to be much of a relationship between the phy
 ```{r}
 # An initial scatter plot to see the shape of the relationship
 ggplot(quant_vars, aes(x=Median, y=AWater)) +
-  geom_point()
+  geom_point() + 
+  labs(title="Median Income vs. Water Area Scatter Plot", x="Median Income", y = "Square Area of Water at Location")
 ggplot(quant_vars, aes(x=Median, y=ALand)) +
-  geom_point()
-
+  geom_point() + 
+  labs(title="Median Income vs. Land Area Scatter Plot", x="Median Income", y = "Square Area of Land at Location")
 
 ```
 It seems that the correlations we produced in the previous section are a result of outlier values that skew the data. Lets to find out what the outliers are.
@@ -176,10 +177,13 @@ ggplot(quant_vars.noOutliers, aes(x = "", y = ALand)) +
 ```{r}
 # An initial scatter plot to see the shape of the relationship
 ggplot(quant_vars.noOutliers, aes(x=Median, y=AWater)) +
-  geom_point()
+  geom_point() + 
+  labs(title="Median Income vs. Water Area Scatter Plot", x="Median Income", y = "Square Area of Water at Location") + 
+  geom_smooth(method='lm')
 ggplot(quant_vars.noOutliers, aes(x=Median, y=ALand)) +
-  geom_point()
-
+  geom_point() + 
+  labs(title="Median Income vs. Land Area Scatter Plot", x="Median Income", y = "Square Area of Land at Location") +
+  geom_smooth(method='lm')
 
 ```
 
@@ -187,15 +191,7 @@ ggplot(quant_vars.noOutliers, aes(x=Median, y=ALand)) +
 ### Correlation matrix without outliers
 
 ```{r}
-df_income <- df_income %>% filter(Median != 300000 & Median != 0)
-
-quant_vars <- df_income %>% 
-  select(Mean, Median, Stdev, AWater, ALand)
-
-shaved_data <- quant_vars %>% filter(Median < 150000 & ALand < 30000000)
-ggplot(shaved_data, aes(x=Median, y=ALand)) + geom_point()
-
-cor_quant <- cor(shaved_data)
+cor_quant <- cor(quant_vars.noOutliers)
 
 melted_quant <- melt(cor_quant)
 
