@@ -82,9 +82,6 @@ df_income2 <- df_income %>% filter(Median != 300000 & Median != 0)
 
 ## Exploration (Playground)
 
-### Quantitative Variables
-Mean, Median, St. Dev, Sum of Weights, AWater, ALand
-
 
 ### Histograms
 Before subsetting our data, we have a strange bimodal distribution of values. There is a second peak all concentrated at an income of $300k. 
@@ -202,14 +199,6 @@ ggplot(data = melted_quant, aes(x=Var1, y=Var2, fill=value)) +
 
 ```
 
-### Histogram without outliers
-```{r}
-# Distribution
-ggplot(data = df_income)+
-  geom_histogram(mapping = aes(x = df_income$Median, fill = df_income$Type), bins = 40) +
-  labs(x = "Household Income (Median)") +
-  scale_fill_discrete(name = "Household Type")
-```
 
 ## One-Sample Statistical Inference for Income
 
