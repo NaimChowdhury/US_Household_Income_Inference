@@ -119,7 +119,9 @@ count(rich_people)
 ## Analysis
 
 ### Correlation Matrix
+How are the quantitative variables correlated with each other? Since the bulk of our quantitative variables are summary statistics gathered manually about each location, they will naturally have a high correlation with each other. 
 
+Naturally, we might ask, do the land area and water area of a location have any relationship with the income of its residents?
 ```{r}
 quant_vars <- df_income2 %>% 
   select(Mean, Median, Stdev, AWater, ALand)
@@ -133,17 +135,54 @@ ggplot(data = melted_quant, aes(x=Var1, y=Var2, fill=value)) +
 ```
 
 ### Scatter Plots and Linear Regressions
+At first glance, there doesn't seem to be much of a relationship between the physical area of a city and the income of the residents. What might happen if we remove outlier values?
 ```{r}
 # An initial scatter plot to see the shape of the relationship
-ggplot(quant_vars, aes(x=Median, y=AWater)) + geom_point()
-ggplot(quant_vars, aes(x=Median, y=ALand)) + geom_point()
+ggplot(quant_vars, aes(x=Median, y=AWater)) +
+  geom_point()
+ggplot(quant_vars, aes(x=Median, y=ALand)) +
+  geom_point()
 
 
 ```
-It seems that the correlations we produced in the previous section are a result of outlier values that skew the data. Lets try throwing out the outliers.
+It seems that the correlations we produced in the previous section are a result of outlier values that skew the data. Lets to find out what the outliers are.
 
 
-### Data Reshaping to get rid of Problem Points
+```{r}
+ggplot(quant_vars, aes(x = "", y = AWater)) +
+  geom_boxplot() +
+  labs(title="Water Area Box Plot", x="", y = "Square Area of Land at Location") +
+  coord_flip() +
+  theme(plot.title = element_text(color="#666666", face="bold", size=12, hjust=.5),
+              axis.text.x = element_text(angle = 90, hjust = 1))
+
+AWater_stats <- boxplot.stats(quant_vars$AWater)
+AWater_stats[1]
+
+ALand_stats <- boxplot.stats(quant_vars$ALand)
+ALand_stats[1]
+
+quant_vars.noOutliers <- quant_vars %>% 
+  filter( (AWater < 1309742) & (ALand > 40326) & (ALand < 82994663) )
+
+ggplot(quant_vars.noOutliers, aes(x = "", y = ALand)) +
+  geom_boxplot() +
+  labs(title="Water Area Box Plot", x="", y = "Square Area of Water at Location") +
+  coord_flip() +
+  theme(plot.title = element_text(color="#666666", face="bold", size=12, hjust=.5),
+              axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+```{r}
+# An initial scatter plot to see the shape of the relationship
+ggplot(quant_vars.noOutliers, aes(x=Median, y=AWater)) +
+  geom_point()
+ggplot(quant_vars.noOutliers, aes(x=Median, y=ALand)) +
+  geom_point()
+
+
+```
+
 
 ### Correlation matrix without outliers
 
