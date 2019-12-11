@@ -193,6 +193,8 @@ ggplot(quant_vars.noOutliers, aes(x=Median, y=ALand)) +
 ```{r}
 cor_quant <- cor(quant_vars.noOutliers)
 
+cor_quant
+
 melted_quant <- melt(cor_quant)
 
 ggplot(data = melted_quant, aes(x=Var1, y=Var2, fill=value)) + 
@@ -209,7 +211,7 @@ ggplot(data = df_income)+
   scale_fill_discrete(name = "Household Type")
 ```
 
-### One-Sample Statistical Inference for Income
+## One-Sample Statistical Inference for Income
 
 Confidence interval for income's population mean income value.
 ```{r}
@@ -247,7 +249,7 @@ d
 ```
 Our effect size is 0.1222492. We witness a relatively small practical effect size.
 
-### Categorical Explanatory Variable
+## Categorical Explanatory Variable
 
 Here we are performing a proportion test for the proportion of median income being lower than 50,000
 ```{r}
@@ -336,3 +338,33 @@ coverage <- mean(inside)
 print(coverage)
 ```
 Our coverage for the true sample mean over 10,000 trials was 89.60%, a little lower than expected (95%), this could be attributed to outliers in the data. 
+
+
+## Bootstrap Simulations 
+
+Based on our previous analysis of the quantitative variables, it seems that income is most highly correlated with the water area at the location. We proceed by computing 10,000 bootstrapped simulations of the data. 
+
+```{r}
+plot(quant_vars.noOutliers$Mean, quant_vars.noOutliers$AWater, 
+     col = "red", pch = 19,
+     xlab = "Median Income", ylab = "Area of Water in Location",
+     main = "Bootstrapped Linear Model for Income vs. Water")
+```
+
+```{r}
+waterfit <- lm(Median ~ AWater, data = quant_vars.noOutliers)
+
+index <- 1:nrow(quant_vars.noOutliers)
+set.seed(7)
+n.trials <- 10000
+for(i in 1:n.trials){
+  index.boot <- sample(index, replace = TRUE) #getting a bootstrap sample of indices
+  quant_vars.boot <- quant_vars.noOutliers[index.boot, ] #bootstrapped dataset
+  fit.boot <- lm(Median ~ AWater, data = quant_vars.boot)
+  abline(fit.boot, lwd = 0.01, col= rgb(0,0.1,0.25, alpha = 0.05)) # add a gray line at that point
+  
+}
+abline(waterfit, lwd=2, col = "blue")
+```
+
+
