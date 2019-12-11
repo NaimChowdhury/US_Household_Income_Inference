@@ -7,6 +7,33 @@ editor_options:
   chunk_output_type: inline
 ---
 
+## Summary
+
+### About the data:
+The dataset originally developed for real estate and business investment research. Income is a vital element when determining both quality and socioeconomic features of a given geographic location. The following data was derived from over +36,000 files and covers 348,893 location records.
+
+### Household & Geographic Statistics:
+- Mean Household Income (double)
+- Median Household Income (double)
+- Standard Deviation of Household Income (double)
+- Number of Households (double)
+- Square area of land at location (double)
+- Square area of water at location (double)
+
+### Geographic Location:
+
+- Longitude (double)
+- Latitude (double)
+- State Name (character)
+- State abbreviated (character)
+- State_Code (character)
+- County Name (character)
+- City Name (character)
+- Name of city, town, village or CPD (character)
+- Primary, Defines if the location is a track and block group.
+- Zip Code (character)
+- Area Code (character)
+
 
 
 ```{r setup, include=FALSE}
@@ -94,7 +121,7 @@ count(rich_people)
 ### Correlation Matrix
 
 ```{r}
-quant_vars <- df_income %>% 
+quant_vars <- df_income2 %>% 
   select(Mean, Median, Stdev, AWater, ALand)
 
 cor_quant <- cor(quant_vars)
